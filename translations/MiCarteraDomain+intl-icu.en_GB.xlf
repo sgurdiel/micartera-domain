@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en-GB" target-language="en-GB" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="stockHasTransactions">
+        <source>stockHasTransactions</source>
+        <target>There is atleast one transaction related to this stock that need to be removed before preceeding.</target>
+      </trans-unit>
+      <trans-unit id="stockExists">
+        <source>stockExists</source>
+        <target>Stock with supplied code already exists</target>
+      </trans-unit>
+      <trans-unit id="stringLength">
+        <source>stringLength</source>
+        <target>Enter a string between {minimum} and {maximum} characters</target>
+      </trans-unit>
+      <trans-unit id="otherCurrencyExpected">
+        <source>otherCurrencyExpected</source>
+        <target>Currency {received} received but {expected} was expected</target>
+      </trans-unit>
+      <trans-unit id="numberPrecision">
+        <source>numberPrecision</source>
+        <target>Enter a number with a maximu of {precision} decimal places.</target>
+      </trans-unit>
+      <trans-unit id="enterNumberBetween">
+        <source>enterNumberBetween</source>
+        <target>Enter a number between {minimum} and {maximum}.</target>
+      </trans-unit>
+      <trans-unit id="maxValueIsSmallerThanMinValue">
+        <source>maxValueIsSmallerThanMinValue</source>
+        <target>Minimum value cannot be greater than maximum value</target>
+      </trans-unit>
+      <trans-unit id="invalidTransactionType">
+        <source>invalidTransactionType</source>
+        <target>Invalid transaction type. Expecting `acquisition` or `liquidation`.</target>
+      </trans-unit>
+      <trans-unit id="transExistsOnDateTime">
+        <source>transExistsOnDateTime</source>
+        <target>A transaction for this account and stock exists at given datetime.</target>
+      </trans-unit>
+      <trans-unit id="transactionAssertStock">
+        <source>transactionAssertStock</source>
+        <target>Expected transaction stock not found.</target>
+      </trans-unit>
+      <trans-unit id="InvalidMovementExpensesAmount">
+        <source>InvalidMovementExpensesAmount</source>
+        <target>Movement expenses amount is invalid according to unaccounted expenses.</target>
+      </trans-unit>
+      <trans-unit id="MovementAmountNotWithinAllowedLimits">
+        <source>MovementAmountNotWithinAllowedLimits</source>
+        <target>Movement amount is not within allowd limits.</target>
+      </trans-unit>
+      <trans-unit id="futureDateNotAllowed">
+        <source>futureDateNotAllowed</source>
+        <target>Dates in the future are not allowed.</target>
+      </trans-unit>
+      <trans-unit id="transBuyCannotBeRemovedWithoutFullAmountOutstanding">
+        <source>transBuyCannotBeRemovedWithoutFullAmountOutstanding</source>
+        <target>Buy transaction can only be removed when full amount is outstanding.</target>
+      </trans-unit>
+      <trans-unit id="numberFormat">
+        <source>numberFormat</source>
+        <target>Invalid format supplied. Use dot (.) as decimal separator.</target>
+      </trans-unit>
+      <trans-unit id="accountingMovementAssertDateTime">
+        <source>accountingMovementAssertDateTime</source>
+        <target>Accounting movement expects sell transaction to be past time of buy transactions.</target>
+      </trans-unit>
+      <trans-unit id="relatedEntityNotPersisted">
+        <source>relatedEntityNotPersisted</source>
+        <target>The related entity `{entity}` must be persisted before storing entity `{entity2}`</target>
+      </trans-unit>
+      <trans-unit id="importCsvDomainError">
+        <source>importCsvDomainError</source>
+        <target><![CDATA[Import stoped at row number {row}
+        Field: {field}
+        Error: {error}]]></target>
+      </trans-unit>
+      <trans-unit id="transNotPassFifoSpec">
+        <source>transNotPassFifoSpec</source>
+        <target>Transaction operation did not pass FIFO contract.</target>
+      </trans-unit>
+      <trans-unit id="failedCreatingDateObjectFromString">
+        <source>failedCreatingDateObjectFromString</source>
+        <target>Failed to create date object from string. Expecting format {format}.</target>
+      </trans-unit>
+      <trans-unit id="collectionInvalidOffsetPosition">
+        <source>collectionInvalidOffsetPosition</source>
+        <target>The requested offset position is invalid for this collection.</target>
+      </trans-unit>
+      <trans-unit id="accountingMovementAcquisitionHasNoAmountOutstanding">
+        <source>accountingMovementAcquisitionHasNoAmountOutstanding</source>
+        <target>Cannot register accounting movement; processed acquisition has no amount outstanding.</target>
+      </trans-unit>
+      <trans-unit id="accountingMovementLiquidationHasNoAmountRemaining">
+        <source>accountingMovementLiquidationHasNoAmountRemaining</source>
+        <target>Cannot register accounting movement; processed liquidation has no amount remaining.</target>
+      </trans-unit>
+      <trans-unit id="invalidIso3">
+        <source>invalidIso3</source>
+        <target>ISO 3-Letter Currency Code required.</target>
+      </trans-unit>
+      <trans-unit id="invalidCurrencySymbol">
+        <source>invalidCurrencySymbol</source>
+        <target>Enter a string between {minimum} and {maximum} characters.</target>
+      </trans-unit>
+      <trans-unit id="currencyCodeAlreadyExists">
+        <source>currencyCodeAlreadyExists</source>
+        <target>Currency code already exists.</target>
+      </trans-unit>
+      <trans-unit id="ExchangeExists">
+        <source>ExchangeExists</source>
+        <target>Exchange code already exists.</target>
+      </trans-unit>
+      <trans-unit id="operationRequiresBothOperandsWithSameCurrency">
+        <source>operationRequiresBothOperandsWithSameCurrency</source>
+        <target>Operation requires both operands having the same currency: {currency1} provided, {currency2} expected.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

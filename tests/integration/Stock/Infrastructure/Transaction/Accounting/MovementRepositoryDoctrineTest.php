@@ -78,7 +78,6 @@ use Xver\PhpAppCoreBundle\Entity\Domain\EntityNotFoundException;
 #[UsesClass(StockRepository::class)]
 #[UsesClass(AcquisitionRepository::class)]
 #[UsesClass(LiquidationRepository::class)]
-#[UsesClass(TransactionExpenseVO::class)]
 #[UsesClass(MovementPriceVO::class)]
 class MovementRepositoryDoctrineTest extends IntegrationTestCase
 {

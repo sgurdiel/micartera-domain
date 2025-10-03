@@ -111,15 +111,32 @@ final class PortfolioDTO extends EntityCollectionQueryResponse
 
     public function getPositionProfitPercentage(int $offset): Number
     {
+        $positionInvestment = $this->calculatePositionTotalInvestment($offset);
         $positionMarketPrice = $this->getPositionMarketPrice($offset);
         $profitPercentage = $this->numberOperation->percentageDifference(
             $positionMarketPrice->getMaxDecimals(),
             2,
+            $positionInvestment,
             $positionMarketPrice,
-            $this->getPositionProfitPrice($offset)
         );
 
         return new Number($profitPercentage);
+    }
+
+    private function calculatePositionTotalInvestment(int $offset): StockProfitVO
+    {
+        $positionExpensesAsStockProfit = new StockProfitVO(
+            $this->getPositionAcquisitionExpenses($offset)->getValue(),
+            $this->getAccount()->getCurrency()
+        );
+        return new StockProfitVO
+            ($this->numberOperation->add(
+                $this->getPositionAcquisitionPrice($offset)->getMaxDecimals(),
+                $this->getPositionAcquisitionPrice($offset),
+                $positionExpensesAsStockProfit
+            ),
+            $this->getAccount()->getCurrency()
+        );
     }
 
     /**

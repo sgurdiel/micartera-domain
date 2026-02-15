@@ -20,6 +20,7 @@ class AccountRepository extends EntityRepository implements AccountRepositoryInt
         parent::__construct($managerRegistry, Account::class);
     }
 
+    #[\Override]
     public function findByIdentifier(string $identifier): ?Account
     {
         $qb = $this->createQueryBuilder('a')
@@ -30,12 +31,14 @@ class AccountRepository extends EntityRepository implements AccountRepositoryInt
         ;
         $query = $qb->getQuery();
 
+        /** @var ?Account */
         return $query->getOneOrNullResult($query::HYDRATE_OBJECT);
     }
 
     /**
      * @throws EntityNotFoundException
      */
+    #[\Override]
     public function findByIdentifierOrThrowException(string $identifier): Account
     {
         $entity = $this->findByIdentifier($identifier);

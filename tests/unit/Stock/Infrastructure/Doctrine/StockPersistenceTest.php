@@ -28,7 +28,7 @@ class StockPersistenceTest extends TestCase
     {
         $repo = $this->createStub(StockRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Stock::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new StockPersistence($registry);
         $result = $persistence->getRepository();
@@ -40,7 +40,7 @@ class StockPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Stock::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new StockPersistence($registry);
         $this->expectException(DomainViolationException::class);
@@ -52,7 +52,7 @@ class StockPersistenceTest extends TestCase
     {
         $repo = $this->createStub(AcquisitionRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Acquisition::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new StockPersistence($registry);
         $result = $persistence->getRepositoryForAcquisition();
@@ -64,7 +64,7 @@ class StockPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Acquisition::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new StockPersistence($registry);
         $this->expectException(DomainViolationException::class);

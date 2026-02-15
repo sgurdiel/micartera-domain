@@ -32,14 +32,13 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
         parent::__construct($managerRegistry, Acquisition::class);
     }
 
-    /**
-     * @psalm-return Acquistion|null
-     */
+    #[\Override]
     public function findById(Uuid $uuid): ?Acquisition
     {
         return $this->findOneBy(['id' => $uuid]);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(Uuid $id): Acquisition
     {
         $entity = $this->findById($id);
@@ -50,6 +49,7 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
         return $entity;
     }
 
+    #[\Override]
     public function findByAccountStockWithActionableAmountAndDateAtOrBefore(
         Account $account,
         Stock $stock,
@@ -71,11 +71,13 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
             $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
         }
 
-        return new AcquisitionCollection(
-            $query->getResult()
-        );
+        /** @var array<int, Acquisition> $result */
+        $result = $query->getResult();
+
+        return new AcquisitionCollection($result);
     }
 
+    #[\Override]
     public function findByStockId(
         Stock $stock,
         int $limit = 1,
@@ -91,6 +93,7 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
         );
     }
 
+    #[\Override]
     public function assertNoTransWithSameAccountStockOnDateTime(
         Account $account,
         Stock $stock,
@@ -108,6 +111,7 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
         return null === $qb->getQuery()->getOneOrNullResult();
     }
 
+    #[\Override]
     public function findByAccountWithActionableAmount(
         Account $account,
         string $sortOrder, // TODO: use enum
@@ -129,19 +133,21 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
         }
         $query = $qb->getQuery();
 
-        return new AcquisitionCollection(
-            $query->getResult()
-        );
+        /** @var array<int, Acquisition> $result */
+        $result = $query->getResult();
+
+        return new AcquisitionCollection($result);
     }
 
+    #[\Override]
     public function portfolioSummary(Account $account, ?Stock $stock = null): SummaryVO
     {
         $and = [
             't.account = :account_id',
             't.amountActionable.value > 0',
         ];
-        $parameters = new ArrayCollection([]);
-        $parameters->add(new Parameter('account_id', $account->getId(), 'uuid'));
+        
+        $parameters = new ArrayCollection([new Parameter('account_id', $account->getId(), 'uuid')]);
         if (false === is_null($stock)) {
             $and[] = 's.code = :stock_code';
             $parameters->add(new Parameter('stock_code', $stock->getId(), 'string'));
@@ -159,7 +165,7 @@ class AcquisitionRepository extends EntityRepository implements AcquisitionRepos
             ->setParameters($parameters)
         ;
 
-        /** @var non-empty-array<string,string,string> */
+        /** @var array{totalAcquisitionPrice: numeric-string, totalMarketPrice: numeric-string, totalAcquisitionFee: numeric-string} $result */
         $result = $qb->getQuery()->getSingleResult();
 
         $numberOperation = new NumberOperation();

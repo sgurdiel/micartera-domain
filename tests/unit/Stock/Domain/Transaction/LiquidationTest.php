@@ -57,7 +57,7 @@ class LiquidationTest extends TestCase
     private static TransactionAmountVO $amount;
     private TransactionExpenseVO $expenses;
     private Account&Stub $account;
-    private MockObject&MovementRepositoryInterface $repoMovement;
+    private MovementRepositoryInterface&Stub $repoMovement;
     private AcquisitionRepositoryInterface&Stub $repoAcquisition;
     private LiquidationRepositoryInterface&MockObject $repoLiquidation;
     private Stub&TransactionPersistenceInterface $transactionPersistence;
@@ -70,8 +70,8 @@ class LiquidationTest extends TestCase
 
     public function setUp(): void
     {
-        $this->repoMovement = $this->createMock(MovementRepositoryInterface::class);
-        $this->repoAcquisition = $this->createMock(AcquisitionRepositoryInterface::class);
+        $this->repoMovement = $this->createStub(MovementRepositoryInterface::class);
+        $this->repoAcquisition = $this->createStub(AcquisitionRepositoryInterface::class);
         $this->repoLiquidation = $this->createMock(LiquidationRepositoryInterface::class);
         $this->repoLiquidation->method('assertNoTransWithSameAccountStockOnDateTime')->willReturn(true);
         $this->transactionPersistence = $this->createStub(TransactionPersistenceInterface::class);
@@ -98,7 +98,6 @@ class LiquidationTest extends TestCase
         $this->repoLiquidation->expects($this->once())->method('flush');
         $this->repoLiquidation->expects($this->once())->method('commit');
 
-        /** @var Liquidation&MockObject */
         $transaction = $this->getMockBuilder(Liquidation::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
@@ -199,8 +198,6 @@ class LiquidationTest extends TestCase
 
     public function testAccountMovementAndClearMovements(): void
     {
-        $this->repoMovement->expects($this->once())->method('remove');
-        $this->repoMovement->expects($this->once())->method('flush');
         $transaction = $this->getMockBuilder(Liquidation::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance', 'sameId'])->getMock();

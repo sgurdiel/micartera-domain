@@ -49,7 +49,7 @@ class AccountCommandTest extends TestCase
     {
         $this->repoAccount = $this->createStub(AccountRepositoryInterface::class);
         $this->repoCurrency = $this->createStub(CurrencyRepositoryInterface::class);
-        $this->accountPersistence = $this->createMock(AccountPersistenceInterface::class);
+        $this->accountPersistence = $this->createStub(AccountPersistenceInterface::class);
         $this->accountPersistence->method('getRepository')->willReturn($this->repoAccount);
         $this->accountPersistence->method('getRepositoryForCurrency')->willReturn($this->repoCurrency);
     }

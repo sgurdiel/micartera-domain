@@ -28,11 +28,13 @@ class LiquidationRepository extends EntityRepository implements LiquidationRepos
     /**
      * @psalm-return Liquidation|null
      */
+    #[\Override]
     public function findById(Uuid $uuid): ?Liquidation
     {
         return $this->findOneBy(['id' => $uuid]);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(Uuid $id): Liquidation
     {
         $entity = $this->findById($id);
@@ -43,6 +45,7 @@ class LiquidationRepository extends EntityRepository implements LiquidationRepos
         return $entity;
     }
 
+    #[\Override]
     public function findByStockId(Stock $stock, int $limit = 1, int $offset = 0): LiquidationCollection // TODO: rename to findByStock
     {
         return new LiquidationCollection(
@@ -55,6 +58,7 @@ class LiquidationRepository extends EntityRepository implements LiquidationRepos
         );
     }
 
+    #[\Override]
     public function assertNoTransWithSameAccountStockOnDateTime(
         Account $account,
         Stock $stock,
@@ -72,6 +76,7 @@ class LiquidationRepository extends EntityRepository implements LiquidationRepos
         return null === $qb->getQuery()->getOneOrNullResult();
     }
 
+    #[\Override]
     public function findByAccountStockAndDateAtOrAfter(
         Account $account,
         Stock $stock,
@@ -92,8 +97,9 @@ class LiquidationRepository extends EntityRepository implements LiquidationRepos
             $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
         }
 
-        return new LiquidationCollection(
-            $query->getResult()
-        );
+        /** @var array<int, Liquidation> $result */
+        $result = $query->getResult();
+
+        return new LiquidationCollection($result);
     }
 }

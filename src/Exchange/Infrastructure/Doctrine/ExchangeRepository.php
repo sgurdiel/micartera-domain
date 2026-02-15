@@ -21,14 +21,13 @@ class ExchangeRepository extends EntityRepository implements ExchangeRepositoryI
         parent::__construct($managerRegistry, Exchange::class);
     }
 
-    /**
-     * @psalm-return Exchange|null
-     */
+    #[\Override]
     public function findById(string $code): ?Exchange
     {
         return $this->find($code);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(string $code): Exchange
     {
         $entity = $this->findById($code);
@@ -39,6 +38,7 @@ class ExchangeRepository extends EntityRepository implements ExchangeRepositoryI
         return $entity;
     }
 
+    #[\Override]
     public function all(): ExchangeCollection
     {
         return new ExchangeCollection($this->findAll());

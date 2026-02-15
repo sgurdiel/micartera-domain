@@ -25,7 +25,7 @@ class ExchangeQueryTest extends TestCase
     public function setUp(): void
     {
         $this->repoExchange = $this->createStub(ExchangeRepositoryInterface::class);
-        $this->exchangePersistence = $this->createMock(ExchangePersistenceInterface::class);
+        $this->exchangePersistence = $this->createStub(ExchangePersistenceInterface::class);
         $this->exchangePersistence->method('getRepository')->willReturn($this->repoExchange);
     }
 

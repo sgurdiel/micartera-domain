@@ -22,14 +22,13 @@ class StockRepository extends EntityRepository implements StockRepositoryInterfa
         parent::__construct($managerRegistry, Stock::class);
     }
 
-    /**
-     * @psalm-return Stock|null
-     */
+    #[\Override]
     public function findById(string $code): ?Stock
     {
         return $this->findOneBy(['code' => $code]);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(string $id): Stock
     {
         $entity = $this->findById($id);
@@ -40,6 +39,7 @@ class StockRepository extends EntityRepository implements StockRepositoryInterfa
         return $entity;
     }
 
+    #[\Override]
     public function findByCurrency(
         Currency $currency,
         ?int $limit = null,
@@ -57,6 +57,7 @@ class StockRepository extends EntityRepository implements StockRepositoryInterfa
         );
     }
 
+    #[\Override]
     public function countByCurrency(
         Currency $currency,
     ): int {

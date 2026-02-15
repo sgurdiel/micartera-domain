@@ -24,11 +24,13 @@ class CurrencyRepository extends EntityRepository implements CurrencyRepositoryI
     /**
      * @psalm-return Currency|null
      */
+    #[\Override]
     public function findById(string $iso3): ?Currency
     {
         return $this->find($iso3);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(string $iso3): Currency
     {
         $entity = $this->findById($iso3);
@@ -39,6 +41,7 @@ class CurrencyRepository extends EntityRepository implements CurrencyRepositoryI
         return $entity;
     }
 
+    #[\Override]
     public function all(): CurrencyCollection
     {
         return new CurrencyCollection(

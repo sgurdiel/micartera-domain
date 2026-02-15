@@ -28,7 +28,7 @@ class AccountPersistenceTest extends TestCase
     {
         $repo = $this->createStub(AccountRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Account::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new AccountPersistence($registry);
         $result = $persistence->getRepository();
@@ -40,7 +40,7 @@ class AccountPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Account::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new AccountPersistence($registry);
         $this->expectException(DomainViolationException::class);
@@ -52,7 +52,7 @@ class AccountPersistenceTest extends TestCase
     {
         $repo = $this->createStub(CurrencyRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Currency::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new AccountPersistence($registry);
         $result = $persistence->getRepositoryForCurrency();
@@ -64,7 +64,7 @@ class AccountPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Currency::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new AccountPersistence($registry);
         $this->expectException(DomainViolationException::class);

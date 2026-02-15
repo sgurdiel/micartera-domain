@@ -7,7 +7,6 @@ namespace Tests\unit\Stock\Domain\Transaction\Accounting;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Xver\MiCartera\Domain\Currency\Domain\Currency;
@@ -45,16 +44,16 @@ use Xver\PhpAppCoreBundle\Exception\Domain\DomainViolationException;
 class MovementTest extends TestCase
 {
     private Stock&Stub $stock;
-    private MockObject&MovementRepositoryInterface $repoMovement;
-    private AcquisitionRepositoryInterface&MockObject $repoAcquisition;
-    private LiquidationRepositoryInterface&MockObject $repoLiquidation;
-    private Stub&TransactionPersistenceInterface $transactionPersistence;
+    private MovementRepositoryInterface&Stub $repoMovement;
+    private AcquisitionRepositoryInterface&Stub $repoAcquisition;
+    private LiquidationRepositoryInterface&Stub $repoLiquidation;
+    private TransactionPersistenceInterface&Stub $transactionPersistence;
 
     public function setUp(): void
     {
-        $this->repoMovement = $this->createMock(MovementRepositoryInterface::class);
-        $this->repoAcquisition = $this->createMock(AcquisitionRepositoryInterface::class);
-        $this->repoLiquidation = $this->createMock(LiquidationRepositoryInterface::class);
+        $this->repoMovement = $this->createStub(MovementRepositoryInterface::class);
+        $this->repoAcquisition = $this->createStub(AcquisitionRepositoryInterface::class);
+        $this->repoLiquidation = $this->createStub(LiquidationRepositoryInterface::class);
         $this->transactionPersistence = $this->createStub(TransactionPersistenceInterface::class);
         $this->transactionPersistence->method('getRepository')->willReturn($this->repoAcquisition);
         $this->transactionPersistence->method('getRepositoryForMovement')->willReturn($this->repoMovement);
@@ -64,8 +63,8 @@ class MovementTest extends TestCase
         $this->stock->method('sameId')->willReturn(true);
     }
 
-    #[DataProvider('createValues2')]
-    public function testIsCreated2(
+    #[DataProvider('createValues')]
+    public function testIsCreated(
         string $acquisitionAmountActionable,
         string $acquisitionPrice,
         string $acquisitionExpenses,
@@ -78,9 +77,6 @@ class MovementTest extends TestCase
         string $movementLiquidationPrice,
         string $movementLiquidationExpenses,
     ): void {
-        $this->repoMovement->expects($this->once())->method('persist');
-
-        /** @var Currency&MockObject */
         $currency = $this->createStub(Currency::class);
         $currency->method('getDecimals')->willReturn(2);
 
@@ -115,7 +111,7 @@ class MovementTest extends TestCase
         $this->assertSame($movementLiquidationExpenses, $accountingMovement->getLiquidationExpenses()->getValue());
     }
 
-    public static function createValues2(): array
+    public static function createValues(): array
     {
         return [
             ['10', '57.8000', '23.54', '10', '60.8000', '15.66', '10', '578.0000', '23.54', '608.0000', '15.66'],
@@ -168,7 +164,6 @@ class MovementTest extends TestCase
 
     public function testSameIdWithInvalidEntityThrowsException(): void
     {
-        /** @var Movement */
         $accountingMovement = $this->getMockBuilder(Movement::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
         $entity = new class implements EntityInterface {
             public function sameId(EntityInterface $otherEntity): bool

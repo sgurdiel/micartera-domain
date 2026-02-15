@@ -44,7 +44,7 @@ class AccountTest extends TestCase
     {
         $this->repoAccount = $this->createMock(AccountRepositoryInterface::class);
         $this->repoCurrency = $this->createStub(CurrencyRepositoryInterface::class);
-        $this->accountPeristence = $this->createMock(AccountPersistenceInterface::class);
+        $this->accountPeristence = $this->createStub(AccountPersistenceInterface::class);
         $this->accountPeristence->method('getRepository')->willReturn($this->repoAccount);
         $this->accountPeristence->method('getRepositoryForCurrency')->willReturn($this->repoCurrency);
         $this->currency = $this->createStub(Currency::class);
@@ -81,7 +81,7 @@ class AccountTest extends TestCase
     public function testCreateWithDuplicateEmailThrowsException(): void
     {
         $this->repoCurrency->method('findById')->willReturn($this->createStub(Currency::class));
-        $this->repoAccount->method('findByIdentifier')->willReturn($this->createStub(Account::class));
+        $this->repoAccount->expects($this->once())->method('findByIdentifier')->willReturn($this->createStub(Account::class));
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('accountEmailExists');
         new Account($this->accountPeristence, 'test@example.com', 'password', $this->currency, self::$timezone, ['ROLE_ADMIN']);

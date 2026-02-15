@@ -13,9 +13,13 @@ use Xver\PhpAppCoreBundle\Exception\Domain\DomainViolationException;
  * @template T of EntityInterface
  *
  * @template-extends ServiceEntityRepository<T>
+ * @template-implements EntityRepositoryInterface<T>
  */
 abstract class EntityRepository extends ServiceEntityRepository implements EntityRepositoryInterface
 {
+    /**
+     * @param class-string<T> $entityClass
+     */
     public function __construct(ManagerRegistry $managerRegistry, private string $entityClass)
     {
         parent::__construct($managerRegistry, $this->entityClass);
@@ -24,6 +28,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
     /**
      * @param T $entity
      */
+    #[\Override]
     public function persist(EntityInterface $entity): self
     {
         $this->validateRepositoryCanOperateEntity($entity);
@@ -35,6 +40,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
     /**
      * @param T $entity
      */
+    #[\Override]
     public function remove(EntityInterface $entity): self
     {
         $this->validateRepositoryCanOperateEntity($entity);
@@ -43,6 +49,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
         return $this;
     }
 
+    #[\Override]
     public function flush(): self
     {
         $this->getEntityManager()->flush();
@@ -50,6 +57,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
         return $this;
     }
 
+    #[\Override]
     public function beginTransaction(): self
     {
         $this->getEntityManager()->beginTransaction();
@@ -57,6 +65,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
         return $this;
     }
 
+    #[\Override]
     public function commit(): self
     {
         $this->getEntityManager()->commit();
@@ -64,6 +73,7 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
         return $this;
     }
 
+    #[\Override]
     public function rollBack(): self
     {
         $this->getEntityManager()->rollback();
@@ -71,9 +81,6 @@ abstract class EntityRepository extends ServiceEntityRepository implements Entit
         return $this;
     }
 
-    /**
-     * @param T $entity
-     */
     private function validateRepositoryCanOperateEntity(EntityInterface $entity): void
     {
         if (!$entity instanceof $this->entityClass) {

@@ -4,9 +4,8 @@
     "PHP_CS_FIXER_IGNORE_ENV": "true"
   },
   "packages": [
-    "php@8.4",
-    "php84Extensions.xdebug@latest",
-    "gh@latest"
+    "php@8.4.17",
+    "php84Extensions.xdebug@latest"
   ],
   "shell": {
     "init_hook": [

@@ -25,7 +25,7 @@ class CurrencyQueryTest extends TestCase
     public function setUp(): void
     {
         $this->repoCurrency = $this->createStub(CurrencyRepositoryInterface::class);
-        $this->currencyPersistence = $this->createMock(CurrencyPersistenceInterface::class);
+        $this->currencyPersistence = $this->createStub(CurrencyPersistenceInterface::class);
         $this->currencyPersistence->method('getRepository')->willReturn($this->repoCurrency);
     }
 

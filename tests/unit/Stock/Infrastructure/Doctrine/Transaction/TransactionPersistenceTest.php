@@ -31,7 +31,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(AcquisitionRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Acquisition::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $result = $persistence->getRepository();
@@ -43,7 +43,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Acquisition::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $this->expectException(DomainViolationException::class);
@@ -55,7 +55,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(LiquidationRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Liquidation::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $result = $persistence->getRepositoryForLiquidation();
@@ -67,7 +67,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Liquidation::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $this->expectException(DomainViolationException::class);
@@ -79,7 +79,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(MovementRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Movement::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $result = $persistence->getRepositoryForMovement();
@@ -91,7 +91,7 @@ class TransactionPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Movement::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new TransactionPersistence($registry);
         $this->expectException(DomainViolationException::class);

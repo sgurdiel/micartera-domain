@@ -33,6 +33,7 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
         parent::__construct($managerRegistry, Movement::class);
     }
 
+    #[\Override]
     public function findByIdOrThrowException(Uuid $acquisitionUuid, Uuid $liquidationUuid): Movement
     {
         $entity = $this->findOneBy(['acquisition' => $acquisitionUuid, 'liquidation' => $liquidationUuid]);
@@ -45,6 +46,7 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
         return $entity;
     }
 
+    #[\Override]
     public function findByAccountAndYear(
         Account $account,
         int $year,
@@ -75,12 +77,13 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
             ->setMaxResults($limit)
         ;
 
-        // @var Movement[]
-        return new MovementCollection(
-            $qb->getQuery()->getResult()
-        );
+        /** @var array<int, Movement> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return new MovementCollection($result);
     }
 
+    #[\Override]
     public function accountingSummaryByAccount(Account $account, int $displayedYear): SummaryVO
     {
         $qb = $this->createQueryBuilder('a')
@@ -98,7 +101,7 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
             ->setParameter('account_id', $account->getId(), 'uuid')
         ;
 
-        /** @var non-empty-array<string,string,string,string> */
+        /** @var array{acquisitionPrice: numeric-string, acquisitionExpenses: numeric-string, liquidationPrice: numeric-string, liquidationExpenses: numeric-string, firstDateTimeUtc: string} $allTimeresult */
         $allTimeresult = $qb->getQuery()->getSingleResult();
 
         $acquisitionPrice = new Number($allTimeresult['acquisitionPrice']);
@@ -140,7 +143,7 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
             )
         ;
 
-        /** @var non-empty-array<string,string,string,string> */
+        /** @var array{acquisitionPrice: numeric-string, acquisitionExpenses: numeric-string, liquidationPrice: numeric-string, liquidationExpenses: numeric-string} $displayedYearResult */
         $displayedYearResult = $qb->getQuery()->getSingleResult(Query::HYDRATE_OBJECT);
 
         $acquisitionPrice = new Number($displayedYearResult['acquisitionPrice']);
@@ -161,6 +164,7 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
         );
     }
 
+    #[\Override]
     public function findByAccountStockAcquisitionDateAfter(
         Account $account,
         Stock $stock,
@@ -180,8 +184,9 @@ class MovementRepository extends EntityRepository implements MovementRepositoryI
             ->addOrderBy('t2.datetimeutc', 'ASC')
         ;
 
-        return new MovementCollection(
-            $qb->getQuery()->getResult()
-        );
+        /** @var array<int, Movement> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return new MovementCollection($result);
     }
 }

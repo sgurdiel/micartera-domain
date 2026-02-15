@@ -27,23 +27,23 @@
     },
     "require": {
         "php": "^8.4",
-        "doctrine/doctrine-bundle": "^2.14",
-        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/doctrine-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.3",
-        "symfony/console": "^7.2",
-        "symfony/dotenv": "^7.2",
+        "symfony/console": "^8.0",
+        "symfony/dotenv": "^8.0",
         "symfony/flex": "^2.5",
-        "symfony/monolog-bundle": "^3.10",
-        "symfony/runtime": "^7.2",
-        "symfony/uid": "^7.2",
-        "symfony/yaml": "^7.2",
+        "symfony/monolog-bundle": "^4.0",
+        "symfony/runtime": "^8.0",
+        "symfony/uid": "^8.0",
+        "symfony/yaml": "^8.0",
         "xver/php-auth-core": "^1.0",
         "xver/php-app-core": "^1.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "phpunit/phpunit": "^12.1",
-        "symfony/finder": "^7.2",
+        "symfony/finder": "^8.0",
         "vimeo/psalm": "^6.10"
     },
     "repositories":[

@@ -75,7 +75,6 @@ class StockCommandTest extends TestCase
 
     public function testCreateCommandSucceeds(): void
     {
-        /** @var Account&Stub */
         $account = $this->createStub(Account::class);
         $account->method('getCurrency')->willReturn($this->currency);
         $this->repoAccount->method('findByIdentifierOrThrowException')->willReturn($account);

@@ -32,16 +32,14 @@ class AccountQueryTest extends TestCase
 
     public function testFindByIdentifierOrThrowExceptionReturnsAccount(): void
     {
-        $identifier = 'test-identifier';
-        $expectedAccount = $this->createMock(Account::class);
+        $expectedAccount = $this->createStub(Account::class);
 
         $this->accountRepo
             ->method('findByIdentifierOrThrowException')
-            ->with($identifier)
             ->willReturn($expectedAccount)
         ;
 
-        $result = $this->accountQuery->findByIdentifierOrThrowException($identifier);
+        $result = $this->accountQuery->findByIdentifierOrThrowException('test-identifier');
 
         $this->assertSame($expectedAccount, $result);
     }
@@ -50,14 +48,11 @@ class AccountQueryTest extends TestCase
     {
         $this->expectException(\Exception::class);
 
-        $identifier = 'non-existent-identifier';
-
         $this->accountRepo
             ->method('findByIdentifierOrThrowException')
-            ->with($identifier)
             ->willThrowException(new \Exception('Account not found'))
         ;
 
-        $this->accountQuery->findByIdentifierOrThrowException($identifier);
+        $this->accountQuery->findByIdentifierOrThrowException('non-existent-identifier');
     }
 }

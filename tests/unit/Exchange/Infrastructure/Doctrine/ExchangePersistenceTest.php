@@ -25,7 +25,7 @@ class ExchangePersistenceTest extends TestCase
     {
         $repo = $this->createStub(ExchangeRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Exchange::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new ExchangePersistence($registry);
         $result = $persistence->getRepository();
@@ -37,7 +37,7 @@ class ExchangePersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Exchange::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new ExchangePersistence($registry);
         $this->expectException(DomainViolationException::class);

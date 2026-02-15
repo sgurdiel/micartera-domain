@@ -7,6 +7,7 @@ namespace Tests\unit\Entity\Infrastructure\Doctrine;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Xver\MiCartera\Domain\Entity\Infrastructure\Doctrine\EntityRepository;
 use Xver\PhpAppCoreBundle\Entity\Domain\EntityInterface;
@@ -32,11 +33,11 @@ class DummyRepository extends EntityRepository
 #[CoversClass(EntityRepository::class)]
 class EntityRepositoryTest extends TestCase
 {
-    private ManagerRegistry&MockObject $managerRegistry;
+    private ManagerRegistry&Stub $managerRegistry;
 
     protected function setUp(): void
     {
-        $this->managerRegistry = $this->createMock(ManagerRegistry::class);
+        $this->managerRegistry = $this->createStub(ManagerRegistry::class);
     }
 
     public function testPersistThrowsOnInvalidEntity()
@@ -45,7 +46,7 @@ class EntityRepositoryTest extends TestCase
 
         $repository = new DummyRepository($this->managerRegistry, DummyEntity::class);
 
-        $invalidEntity = $this->createMock(EntityInterface::class);
+        $invalidEntity = $this->createStub(EntityInterface::class);
 
         $repository->persist($invalidEntity);
     }

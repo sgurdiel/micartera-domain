@@ -25,7 +25,7 @@ class CurrencyPersistenceTest extends TestCase
     {
         $repo = $this->createStub(CurrencyRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Currency::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new CurrencyPersistence($registry);
         $result = $persistence->getRepository();
@@ -37,7 +37,7 @@ class CurrencyPersistenceTest extends TestCase
     {
         $repo = $this->createStub(EntityRepository::class);
         $registry = $this->createStub(ManagerRegistry::class);
-        $registry->method('getRepository')->with(Currency::class)->willReturn($repo);
+        $registry->method('getRepository')->willReturn($repo);
 
         $persistence = new CurrencyPersistence($registry);
         $this->expectException(DomainViolationException::class);

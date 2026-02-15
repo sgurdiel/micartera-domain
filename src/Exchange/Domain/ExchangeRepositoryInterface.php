@@ -11,7 +11,7 @@ interface ExchangeRepositoryInterface extends EntityRepositoryInterface
 {
     public function findById(string $code): ?Exchange;
 
-    public function findByIdOrThrowException(string $id): Exchange;
+    public function findByIdOrThrowException(string $code): Exchange;
 
     public function all(): ExchangeCollection;
 }

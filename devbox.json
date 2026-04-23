@@ -4,7 +4,7 @@
     "PHP_CS_FIXER_IGNORE_ENV": "true"
   },
   "packages": [
-    "php@8.4.17",
+    "php@8.4.20",
     "php84Extensions.xdebug@latest"
   ],
   "shell": {

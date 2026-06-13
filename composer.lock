@@ -5778,21 +5778,21 @@
         },
         {
             "name": "xver/php-app-core",
-            "version": "1.0.6",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sgurdiel/php-app-core.git",
-                "reference": "ce8f895e922223d93d694c3893a0aa07a3ce8cc7"
+                "reference": "d5d5fa62aaad6eb0b80db1a852b8cd635b02ff13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sgurdiel/php-app-core/zipball/ce8f895e922223d93d694c3893a0aa07a3ce8cc7",
-                "reference": "ce8f895e922223d93d694c3893a0aa07a3ce8cc7",
+                "url": "https://api.github.com/repos/sgurdiel/php-app-core/zipball/d5d5fa62aaad6eb0b80db1a852b8cd635b02ff13",
+                "reference": "d5d5fa62aaad6eb0b80db1a852b8cd635b02ff13",
                 "shasum": ""
             },
             "require": {
                 "doctrine/collections": "^2.2 || ^3.0",
-                "php": "^8.4",
+                "php": "^8.5",
                 "symfony/http-kernel": "^8.1",
                 "symfony/translation": "^8.1"
             },
@@ -5815,22 +5815,22 @@
             "description": "Provides a PHP skeleton for developing new apps",
             "support": {
                 "issues": "https://github.com/sgurdiel/php-app-core/issues",
-                "source": "https://github.com/sgurdiel/php-app-core/tree/1.0.6"
+                "source": "https://github.com/sgurdiel/php-app-core/tree/1.0.8"
             },
-            "time": "2026-05-30T18:12:40+00:00"
+            "time": "2026-06-13T19:04:37+00:00"
         },
         {
             "name": "xver/php-auth-core",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sgurdiel/php-auth-core.git",
-                "reference": "bf537fad7252218a261c9eed5e54744711b036d4"
+                "reference": "a0b818c521eb4b1946664d3d72db8484bfab72a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sgurdiel/php-auth-core/zipball/bf537fad7252218a261c9eed5e54744711b036d4",
-                "reference": "bf537fad7252218a261c9eed5e54744711b036d4",
+                "url": "https://api.github.com/repos/sgurdiel/php-auth-core/zipball/a0b818c521eb4b1946664d3d72db8484bfab72a2",
+                "reference": "a0b818c521eb4b1946664d3d72db8484bfab72a2",
                 "shasum": ""
             },
             "require": {
@@ -5840,7 +5840,7 @@
                 "symfony/translation": "^8.1",
                 "symfony/uid": "^8.1",
                 "symfony/validator": "^8.1",
-                "xver/php-app-core": "^1.0.6"
+                "xver/php-app-core": "^1.0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^13.1",
@@ -5865,9 +5865,9 @@
             "description": "Provides Authentication",
             "support": {
                 "issues": "https://github.com/sgurdiel/php-auth-core/issues",
-                "source": "https://github.com/sgurdiel/php-auth-core/tree/1.0.5"
+                "source": "https://github.com/sgurdiel/php-auth-core/tree/1.0.6"
             },
-            "time": "2026-05-30T20:04:42+00:00"
+            "time": "2026-06-13T19:09:33+00:00"
         }
     ],
     "packages-dev": [

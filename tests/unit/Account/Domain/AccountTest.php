@@ -6,7 +6,6 @@ namespace Tests\unit\Account\Domain;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
@@ -31,7 +30,7 @@ class AccountTest extends TestCase
 {
     private Currency&Stub $currency;
     private static \DateTimeZone $timezone;
-    private AccountRepositoryInterface&MockObject $repoAccount;
+    private AccountRepositoryInterface&Stub $repoAccount;
     private CurrencyRepositoryInterface&Stub $repoCurrency;
     private AccountPersistenceInterface&Stub $accountPeristence;
 
@@ -42,7 +41,7 @@ class AccountTest extends TestCase
 
     public function setUp(): void
     {
-        $this->repoAccount = $this->createMock(AccountRepositoryInterface::class);
+        $this->repoAccount = $this->createStub(AccountRepositoryInterface::class);
         $this->repoCurrency = $this->createStub(CurrencyRepositoryInterface::class);
         $this->accountPeristence = $this->createStub(AccountPersistenceInterface::class);
         $this->accountPeristence->method('getRepository')->willReturn($this->repoAccount);
@@ -81,7 +80,7 @@ class AccountTest extends TestCase
     public function testCreateWithDuplicateEmailThrowsException(): void
     {
         $this->repoCurrency->method('findById')->willReturn($this->createStub(Currency::class));
-        $this->repoAccount->expects($this->once())->method('findByIdentifier')->willReturn($this->createStub(Account::class));
+        $this->repoAccount->method('findByIdentifier')->willReturn($this->createStub(Account::class));
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('accountEmailExists');
         new Account($this->accountPeristence, 'test@example.com', 'password', $this->currency, self::$timezone, ['ROLE_ADMIN']);
@@ -89,7 +88,7 @@ class AccountTest extends TestCase
 
     public function testExceptionIsThrownOnCommitFail(): void
     {
-        $this->repoAccount->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating uncached exception'));
+        $this->repoAccount->method('persist')->willThrowException(new \Exception('simulating uncached exception'));
         $this->repoCurrency->method('findById')->willReturn($this->currency);
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('simulating uncached exception');

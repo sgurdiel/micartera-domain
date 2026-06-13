@@ -7,7 +7,6 @@ namespace Tests\unit\Stock\Application\Command\Transaction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -63,22 +62,22 @@ class StockOperationImportCommandTest extends TestCase
     private Currency&Stub $currency;
     private Account&Stub $account;
     private Stock&Stub $stock;
-    private MockObject&StockRepositoryInterface $repoStock;
-    private AccountRepositoryInterface&MockObject $repoAccount;
-    private MockObject&MovementRepositoryInterface $repoMovement;
-    private AcquisitionRepositoryInterface&MockObject $repoAcquisition;
-    private LiquidationRepositoryInterface&MockObject $repoLiquidation;
-    private Stub&TransactionPersistenceInterface $transactionPersistence;
+    private StockRepositoryInterface&Stub $repoStock;
+    private AccountRepositoryInterface&Stub $repoAccount;
+    private MovementRepositoryInterface&Stub $repoMovement;
+    private AcquisitionRepositoryInterface&Stub $repoAcquisition;
+    private LiquidationRepositoryInterface&Stub $repoLiquidation;
+    private TransactionPersistenceInterface&Stub $transactionPersistence;
     private AccountPersistenceInterface&Stub $accountPersistence;
     private StockPersistenceInterface&Stub $stockPersistence;
 
     public function setUp(): void
     {
-        $this->repoStock = $this->createMock(StockRepositoryInterface::class);
-        $this->repoAccount = $this->createMock(AccountRepositoryInterface::class);
-        $this->repoMovement = $this->createMock(MovementRepositoryInterface::class);
-        $this->repoAcquisition = $this->createMock(AcquisitionRepositoryInterface::class);
-        $this->repoLiquidation = $this->createMock(LiquidationRepositoryInterface::class);
+        $this->repoStock = $this->createStub(StockRepositoryInterface::class);
+        $this->repoAccount = $this->createStub(AccountRepositoryInterface::class);
+        $this->repoMovement = $this->createStub(MovementRepositoryInterface::class);
+        $this->repoAcquisition = $this->createStub(AcquisitionRepositoryInterface::class);
+        $this->repoLiquidation = $this->createStub(LiquidationRepositoryInterface::class);
         $this->transactionPersistence = $this->createStub(TransactionPersistenceInterface::class);
         $this->transactionPersistence->method('getRepository')->willReturn($this->repoAcquisition);
         $this->transactionPersistence->method('getRepositoryForMovement')->willReturn($this->repoMovement);

@@ -58,7 +58,6 @@ class MovementTest extends TestCase
         $this->transactionPersistence->method('getRepository')->willReturn($this->repoAcquisition);
         $this->transactionPersistence->method('getRepositoryForMovement')->willReturn($this->repoMovement);
         $this->transactionPersistence->method('getRepositoryForLiquidation')->willReturn($this->repoLiquidation);
-        // @var Stock&Stub
         $this->stock = $this->createStub(Stock::class);
         $this->stock->method('sameId')->willReturn(true);
     }
@@ -80,7 +79,6 @@ class MovementTest extends TestCase
         $currency = $this->createStub(Currency::class);
         $currency->method('getDecimals')->willReturn(2);
 
-        /** @var Acquisition&Stub */
         $acquisition = $this->createStub(Acquisition::class);
         $acquisition->method('getStock')->willReturn($this->stock);
         $acquisition->method('getDateTimeUtc')->willReturn(new \DateTime('30 minutes ago'));
@@ -90,7 +88,6 @@ class MovementTest extends TestCase
         $acquisition->method('getCurrency')->willReturn($currency);
         $acquisition->method('getExpensesUnaccountedFor')->willReturn(new TransactionExpenseVO($acquisitionExpenses, $currency));
 
-        /** @var Liquidation&Stub */
         $liquidation = $this->createStub(Liquidation::class);
         $liquidation->method('getStock')->willReturn($this->stock);
         $liquidation->method('getDateTimeUtc')->willReturn(new \DateTime('20 minutes ago'));
@@ -124,15 +121,12 @@ class MovementTest extends TestCase
 
     public function testMovementWithTransactionsHavingDifferentStockThrowsException(): void
     {
-        /** @var Stock&Stub */
         $stock = $this->createStub(Stock::class);
         $stock->method('sameId')->willReturn(false);
 
-        /** @var Acquisition&Stub */
         $acquisition = $this->createStub(Acquisition::class);
         $acquisition->method('getStock')->willReturn($stock);
 
-        /** @var Liquidation&Stub */
         $liquidation = $this->createStub(Liquidation::class);
         $liquidation->method('getStock')->willReturn($stock);
         $this->expectException(DomainViolationException::class);
@@ -142,16 +136,14 @@ class MovementTest extends TestCase
 
     public function testLiquidationDateNotAfterAcquistionThrowsException(): void
     {
-        $price = $this->createMock(StockPriceVO::class);
+        $price = $this->createStub(StockPriceVO::class);
 
-        /** @var Acquisition&Stub */
         $acquisition = $this->createStub(Acquisition::class);
         $acquisition->method('getStock')->willReturn($this->stock);
         $acquisition->method('getDateTimeUtc')->willReturn(new \DateTime('20 minutes ago'));
         $acquisition->method('getAmountActionable')->willReturn(new TransactionAmountActionableVO('3'));
         $acquisition->method('getPrice')->willReturn($price);
 
-        /** @var Liquidation&Stub */
         $liquidation = $this->createStub(Liquidation::class);
         $liquidation->method('getStock')->willReturn($this->stock);
         $liquidation->method('getDateTimeUtc')->willReturn(new \DateTime('30 minutes ago'));
@@ -164,26 +156,25 @@ class MovementTest extends TestCase
 
     public function testSameIdWithInvalidEntityThrowsException(): void
     {
-        $accountingMovement = $this->getMockBuilder(Movement::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $this->expectException(\InvalidArgumentException::class);
+        $accountingMovement = $this->getMockBuilder(Movement::class)->disableOriginalConstructor()->onlyMethods(['getAcquisition'])->getMock();
+        $accountingMovement->expects($this->never())->method('getAcquisition');
         $entity = new class implements EntityInterface {
             public function sameId(EntityInterface $otherEntity): bool
             {
                 return true;
             }
         };
-        $this->expectException(\InvalidArgumentException::class);
         $accountingMovement->sameId($entity);
     }
 
     public function testAcquisitionWithoutAmountOutstandingThrowsException(): void
     {
-        /** @var Acquisition&Stub */
         $acquisition = $this->createStub(Acquisition::class);
         $acquisition->method('getStock')->willReturn($this->stock);
         $acquisition->method('getDateTimeUtc')->willReturn(new \DateTime('30 minutes ago'));
         $acquisition->method('getAmountActionable')->willReturn(new TransactionAmountActionableVO('0'));
 
-        /** @var Liquidation&Stub */
         $liquidation = $this->createStub(Liquidation::class);
         $liquidation->method('getStock')->willReturn($this->stock);
         $liquidation->method('getDateTimeUtc')->willReturn(new \DateTime('20 minutes ago'));
@@ -194,13 +185,11 @@ class MovementTest extends TestCase
 
     public function testLiquidationWithoutAmountRemainingThrowsException(): void
     {
-        /** @var Acquisition&Stub */
         $acquisition = $this->createStub(Acquisition::class);
         $acquisition->method('getStock')->willReturn($this->stock);
         $acquisition->method('getDateTimeUtc')->willReturn(new \DateTime('30 minutes ago'));
         $acquisition->method('getAmountActionable')->willReturn(new TransactionAmountActionableVO('10'));
 
-        /** @var Liquidation&Stub */
         $liquidation = $this->createStub(Liquidation::class);
         $liquidation->method('getStock')->willReturn($this->stock);
         $liquidation->method('getDateTimeUtc')->willReturn(new \DateTime('20 minutes ago'));

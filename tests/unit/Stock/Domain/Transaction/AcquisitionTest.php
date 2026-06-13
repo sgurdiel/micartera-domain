@@ -7,7 +7,6 @@ namespace Tests\unit\Stock\Domain\Transaction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
@@ -41,7 +40,7 @@ use Xver\PhpAppCoreBundle\Exception\Domain\DomainViolationException;
 #[UsesClass(TransactionAmountActionableVO::class)]
 #[UsesClass(TransactionAmountVO::class)]
 #[UsesClass(TransactionExpenseVO::class)]
-class AcquistionTest extends TestCase
+class AcquisitionTest extends TestCase
 {
     private Currency&Stub $currency;
     private StockPriceVO $price;
@@ -51,7 +50,7 @@ class AcquistionTest extends TestCase
     private TransactionExpenseVO $expenses;
     private Account&Stub $account;
     private MovementRepositoryInterface&Stub $repoMovement;
-    private AcquisitionRepositoryInterface&MockObject $repoAcquisition;
+    private AcquisitionRepositoryInterface&Stub $repoAcquisition;
     private LiquidationRepositoryInterface&Stub $repoLiquidation;
     private Stub&TransactionPersistenceInterface $transactionPersistence;
 
@@ -64,7 +63,7 @@ class AcquistionTest extends TestCase
     public function setUp(): void
     {
         $this->repoMovement = $this->createStub(MovementRepositoryInterface::class);
-        $this->repoAcquisition = $this->createMock(AcquisitionRepositoryInterface::class);
+        $this->repoAcquisition = $this->createStub(AcquisitionRepositoryInterface::class);
         $this->repoAcquisition->method('assertNoTransWithSameAccountStockOnDateTime')->willReturn(true);
         $this->repoLiquidation = $this->createStub(LiquidationRepositoryInterface::class);
         $this->transactionPersistence = $this->createStub(TransactionPersistenceInterface::class);
@@ -89,6 +88,7 @@ class AcquistionTest extends TestCase
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
         $this->assertInstanceOf(Acquisition::class, $transaction);
         $this->assertSame($this->stock, $transaction->getStock());
         $this->assertEquals(self::$dateTimeUtc->format('Y-m-d H:i:s'), $transaction->getDateTimeUtc()->format('Y-m-d H:i:s'));
@@ -108,6 +108,7 @@ class AcquistionTest extends TestCase
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
         $entity = new class implements EntityInterface {
             public function sameId(EntityInterface $otherEntity): bool
             {
@@ -126,9 +127,10 @@ class AcquistionTest extends TestCase
         $transactionPersistence->method('getRepository')->willReturn($repoAcquisition);
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('transExistsOnDateTime');
-        $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
+        $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
     }
 
     public function testDateInFutureThrowsException(): void
@@ -152,7 +154,7 @@ class AcquistionTest extends TestCase
     }
 
     #[DataProvider('invalidAmount')]
-    public function testInvalidAmountFormatThrowsException($transAmount): void
+    public function testInvalidAmountFormatThrowsException(string $transAmount): void
     {
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('enterNumberBetween');
@@ -175,9 +177,11 @@ class AcquistionTest extends TestCase
         $transaction1 = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction1->expects($this->never())->method('fiFoCriteriaInstance');
         $transaction2 = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction2->expects($this->never())->method('fiFoCriteriaInstance');
         $movement = $this->createStub(Movement::class);
         $movement->method('getAcquisition')->willReturn($transaction2);
         $this->expectException(\InvalidArgumentException::class);
@@ -189,9 +193,11 @@ class AcquistionTest extends TestCase
         $transaction1 = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction1->expects($this->never())->method('fiFoCriteriaInstance');
         $transaction2 = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction2->expects($this->never())->method('fiFoCriteriaInstance');
         $movement = $this->createStub(Movement::class);
         $movement->method('getAcquisition')->willReturn($transaction2);
         $this->expectException(\InvalidArgumentException::class);
@@ -200,32 +206,33 @@ class AcquistionTest extends TestCase
 
     public function testUnaccountMovementWithWrongAmountThrowsException(): void
     {
+        $this->expectException(DomainViolationException::class);
+        $this->expectExceptionMessage('MovementAmountNotWithinAllowedLimits');
         $amount = new TransactionAmountVO('10');
         $amountInvalid = new TransactionAmountVO('12');
-
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, $amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
         $movement = $this->createStub(Movement::class);
         $movement->method('getAcquisition')->willReturn($transaction);
         $movement->method('getAmount')->willReturn($amountInvalid);
-        $this->expectException(DomainViolationException::class);
-        $this->expectExceptionMessage('MovementAmountNotWithinAllowedLimits');
         $transaction->unaccountMovement($this->transactionPersistence->getRepository(), $movement);
     }
 
     public function testUnaccountMovementWithWrongExpensesThrowsException(): void
     {
+        $this->expectException(DomainViolationException::class);
+        $this->expectExceptionMessage('InvalidMovementExpensesAmount');
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
         $movement = $this->createStub(Movement::class);
         $movement->method('getAcquisition')->willReturn($transaction);
         $movement->method('getAmount')->willReturn(self::$amount);
         $invalidExpenses = $this->expenses->add(new TransactionExpenseVO('1', $this->currency));
         $movement->method('getAcquisitionExpenses')->willReturn($invalidExpenses);
-        $this->expectException(DomainViolationException::class);
-        $this->expectExceptionMessage('InvalidMovementExpensesAmount');
         $transaction->unaccountMovement($this->transactionPersistence->getRepository(), $movement);
     }
 
@@ -288,9 +295,7 @@ class AcquistionTest extends TestCase
 
     public function testCreateIsRolledBackOnTransactionException(): void
     {
-        $this->repoAcquisition->expects($this->once())->method('beginTransaction');
-        $this->repoAcquisition->expects($this->once())->method('commit')->willThrowException(new \Exception('simulating uncached exception'));
-        $this->repoAcquisition->expects($this->once())->method('rollBack');
+        $this->repoAcquisition->method('commit')->willThrowException(new \Exception('simulating uncached exception'));
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('simulating uncached exception');
         $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
@@ -303,10 +308,7 @@ class AcquistionTest extends TestCase
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
-        $this->repoAcquisition->expects($this->never())->method('beginTransaction');
-        $this->repoAcquisition->expects($this->once())->method('remove');
-        $this->repoAcquisition->expects($this->once())->method('flush');
-        $this->repoAcquisition->expects($this->never())->method('commit');
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
         $transaction->persistRemove($this->transactionPersistence);
     }
 
@@ -327,7 +329,7 @@ class AcquistionTest extends TestCase
 
     public function testExceptionIsThrownOnCreateCommitFail(): void
     {
-        $this->repoAcquisition->expects($this->once())->method('commit')->willThrowException(new \Exception('simulating uncached exception'));
+        $this->repoAcquisition->method('commit')->willThrowException(new \Exception('simulating uncached exception'));
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('simulating uncached exception');
         $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
@@ -340,7 +342,8 @@ class AcquistionTest extends TestCase
         $transaction = $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(
             [$this->transactionPersistence, $this->stock, $this->stock->getPrice(), self::$dateTimeUtc, self::$amount, $this->expenses, $this->account]
         )->onlyMethods(['fiFoCriteriaInstance'])->getMock();
-        $this->repoAcquisition->expects($this->once())->method('remove')->willThrowException(new \Exception('simulating uncached exception'));
+        $transaction->expects($this->never())->method('fiFoCriteriaInstance');
+        $this->repoAcquisition->method('remove')->willThrowException(new \Exception('simulating uncached exception'));
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('simulating uncached exception');
         $transaction->persistRemove($this->transactionPersistence);
@@ -348,7 +351,7 @@ class AcquistionTest extends TestCase
 
     public function testDomainExceptionWhileInCreateTransactionThrowsDomainException(): void
     {
-        $this->repoAcquisition->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating exception is thrown'));
+        $this->repoAcquisition->method('persist')->willThrowException(new \Exception('simulating exception is thrown'));
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('simulating exception is thrown');
         $this->getMockBuilder(Acquisition::class)->enableOriginalConstructor()->setConstructorArgs(

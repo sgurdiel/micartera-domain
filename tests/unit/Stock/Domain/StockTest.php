@@ -59,33 +59,37 @@ class StockTest extends TestCase
 
     public function testStockObjectIsCreated(): void
     {
+        $this->repoStock->expects($this->once())->method('persist');
         $this->currency->method('sameId')->willReturn(true);
-        $name = 'ABCD Name';
-        $stock = new Stock($this->stockPersistence, 'ABCD', $name, $this->stockPrice, $this->exchange);
+        $code = "TEST";
+        $name = "TEST NAME";
+        $stock = new Stock($this->stockPersistence, $code, $name, $this->stockPrice, $this->exchange);
         $this->assertInstanceOf(Stock::class, $stock);
         $this->assertTrue($stock->sameId($stock));
         $this->assertSame($name, $stock->getName());
         $this->assertSame('4.5614', $stock->getPrice()->getValue());
         $this->assertSame($this->currency, $stock->getCurrency());
-        $this->assertSame('ABCD', $stock->getId());
+        $this->assertSame($code, $stock->getId());
         $this->assertSame($this->exchange, $stock->getExchange());
     }
 
     public function testDuplicateStockCodeThrowsException(): void
     {
+        $this->repoStock->expects($this->once())->method('persist');
         $stock = new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
         $this->repoStock->method('findById')->willReturn($stock);
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('stockExists');
-        new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
+        new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
     }
 
     #[DataProvider('invalidCodes')]
-    public function testStockCodeFormat($code): void
+    public function testStockCodeFormat(string $code): void
     {
+        $this->repoStock->expects($this->never())->method('persist');
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('stringLength');
-        new Stock($this->stockPersistence, $code, 'ABCD Name', $this->stockPrice, $this->exchange);
+        new Stock($this->stockPersistence, $code, 'TEST NAME', $this->stockPrice, $this->exchange);
     }
 
     public static function invalidCodes(): array
@@ -96,11 +100,12 @@ class StockTest extends TestCase
     }
 
     #[DataProvider('invalidNames')]
-    public function testStockNameFormat($name): void
+    public function testStockNameFormat(string $name): void
     {
+        $this->repoStock->expects($this->never())->method('persist');
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('stringLength');
-        new Stock($this->stockPersistence, 'ABCD', $name, $this->stockPrice, $this->exchange);
+        new Stock($this->stockPersistence, 'TEST', $name, $this->stockPrice, $this->exchange);
     }
 
     public static function invalidNames(): array
@@ -117,16 +122,19 @@ class StockTest extends TestCase
 
     public function testUpdateStockPriceWithInvalidCurrencyThrowsException(): void
     {
+        $this->repoStock->expects($this->once())->method('persist');
         $this->currency->method('sameId')->willReturn(false);
-        $stock = new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('otherCurrencyExpected');
+
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
         $stock->persistUpdate($this->stockPersistence, $stock->getName(), $this->stockPrice);
     }
 
     public function testSameIdWithInvalidEntityThrowsException(): void
     {
-        $stock = new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
+        $this->repoStock->expects($this->once())->method('persist');
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
         $entity = new class implements EntityInterface {
             public function sameId(EntityInterface $otherEntity): bool
             {
@@ -139,39 +147,37 @@ class StockTest extends TestCase
 
     public function testSetPrice(): void
     {
+        $this->repoStock->expects($this->exactly(2))->method('persist');
         $this->currency->method('sameId')->willReturn(true);
-        $stock = new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
-
-        /** @var StockPriceVO&Stub */
         $newStockPrice = $this->createStub(StockPriceVO::class);
         $newStockPrice->method('getValue')->willReturn('6.7824');
+
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);       
         $stock->persistUpdate($this->stockPersistence, $stock->getName(), $newStockPrice);
         $this->assertSame('6.7824', $stock->getPrice()->getValue());
     }
 
     public function testRemoveWhenHavingTransactionsWillThrowException(): void
     {
-        /** @var AcquisitionsCollection&Stub */
+        $this->repoStock->expects($this->never())->method('remove');
         $acquisitionsColletion = $this->createStub(AcquisitionCollection::class);
         $acquisitionsColletion->method('count')->willReturn(1);
         $this->repoAcquisition->method('findByStockId')->willReturn($acquisitionsColletion);
-
-        /** @var Stock */
-        $stock = $this->getMockBuilder(Stock::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
         $this->expectException(DomainViolationException::class);
         $this->expectExceptionMessage('stockHasTransactions');
+
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
         $stock->persistRemove($this->stockPersistence);
     }
 
     public function testRemove(): void
     {
         $this->repoStock->expects($this->once())->method('remove');
-
-        /** @var AcquisitionsCollection&Stub */
         $acquisitionsColletion = $this->createStub(AcquisitionCollection::class);
         $acquisitionsColletion->method('count')->willReturn(0);
         $this->repoAcquisition->method('findByStockId')->willReturn($acquisitionsColletion);
-        $stock = $this->getMockBuilder(Stock::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
+
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
         $stock->persistRemove($this->stockPersistence);
     }
 
@@ -181,52 +187,49 @@ class StockTest extends TestCase
         $currency->method('sameId')->willReturn(true);
         $this->repoStock->expects($this->once())->method('persist');
         $this->repoStock->expects($this->once())->method('flush');
-
-        /** @var AcquisitionsCollection&Stub */
         $acquisitionsColletion = $this->createStub(AcquisitionCollection::class);
         $acquisitionsColletion->method('count')->willReturn(0);
         $this->repoAcquisition->method('findByStockId')->willReturn($acquisitionsColletion);
 
-        /** @var MockObject&Stock */
         $stock = $this->getMockBuilder(Stock::class)->disableOriginalConstructor()->onlyMethods(['getCurrency'])->getMock();
         $stock->method('getCurrency')->willReturn($currency);
+        $stock->expects($this->once())->method('getCurrency');
         $stock->persistUpdate($this->stockPersistence, 'newName', new StockPriceVO('37.21', $this->stockPrice->getCurrency()));
     }
 
     public function testExceptionIsThrownOnCreateCommitFail(): void
     {
-        $this->repoStock->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating uncached exception'));
+        $this->repoStock->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating exception'));
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('simulating uncached exception');
-        new Stock($this->stockPersistence, 'ABCD', 'ABCD Name', $this->stockPrice, $this->exchange);
+        $this->expectExceptionMessage('simulating exception');
+
+        new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);
     }
 
     public function testExceptionIsThrownOnUpdateCommitFail(): void
     {
         $currency = $this->createStub(Currency::class);
         $currency->method('sameId')->willReturn(true);
+        $this->repoStock->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating exception'));
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('simulating exception');
 
-        /** @var MockObject&Stock */
         $stock = $this->getMockBuilder(Stock::class)->disableOriginalConstructor()->onlyMethods(['getCurrency'])->getMock();
         $stock->method('getCurrency')->willReturn($currency);
-        $this->repoStock->expects($this->once())->method('persist')->willThrowException(new \Exception('simulating uncached exception'));
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('simulating uncached exception');
+        $stock->expects($this->once())->method('getCurrency');
         $stock->persistUpdate($this->stockPersistence, 'newName', new StockPriceVO('33.4451', $this->stockPrice->getCurrency()));
     }
 
     public function testExceptionIsThrownOnRemoveCommitFail(): void
     {
-        /** @var Stock */
-        $stock = $this->getMockBuilder(Stock::class)->disableOriginalConstructor()->onlyMethods([])->getMock();
-        $this->repoStock->expects($this->once())->method('remove')->willThrowException(new \Exception('simulating uncached exception'));
-
-        /** @var AcquisitionsCollection&Stub */
+        $this->repoStock->expects($this->once())->method('remove')->willThrowException(new \Exception('simulating exception'));
         $acquisitionsColletion = $this->createStub(AcquisitionCollection::class);
         $acquisitionsColletion->method('count')->willReturn(0);
         $this->repoAcquisition->method('findByStockId')->willReturn($acquisitionsColletion);
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('simulating uncached exception');
+        $this->expectExceptionMessage('simulating exception');
+
+        $stock = new Stock($this->stockPersistence, 'TEST', 'TEST NAME', $this->stockPrice, $this->exchange);   
         $stock->persistRemove($this->stockPersistence);
     }
 }

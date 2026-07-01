@@ -5,7 +5,7 @@
   },
   "packages": [
     "php@8.5.7",
-    "php85Extensions.xdebug@3.5.1"
+    "php85Extensions.xdebug@3.5.3"
   ],
   "shell": {
     "init_hook": [

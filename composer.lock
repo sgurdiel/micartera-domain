@@ -5823,16 +5823,16 @@
         },
         {
             "name": "xver/php-auth-core",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sgurdiel/php-auth-core.git",
-                "reference": "854449edbe5c179a8c0e50ae5e0fa47f19fb7cd7"
+                "reference": "381381f53ad1de3e40269fb725bb5ba9762c70e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sgurdiel/php-auth-core/zipball/854449edbe5c179a8c0e50ae5e0fa47f19fb7cd7",
-                "reference": "854449edbe5c179a8c0e50ae5e0fa47f19fb7cd7",
+                "url": "https://api.github.com/repos/sgurdiel/php-auth-core/zipball/381381f53ad1de3e40269fb725bb5ba9762c70e9",
+                "reference": "381381f53ad1de3e40269fb725bb5ba9762c70e9",
                 "shasum": ""
             },
             "require": {
@@ -5867,9 +5867,9 @@
             "description": "Provides Authentication",
             "support": {
                 "issues": "https://github.com/sgurdiel/php-auth-core/issues",
-                "source": "https://github.com/sgurdiel/php-auth-core/tree/1.0.8"
+                "source": "https://github.com/sgurdiel/php-auth-core/tree/1.0.9"
             },
-            "time": "2026-07-18T18:38:59+00:00"
+            "time": "2026-08-20T12:46:22+00:00"
         }
     ],
     "packages-dev": [
